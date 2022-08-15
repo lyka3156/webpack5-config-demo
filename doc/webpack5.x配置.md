@@ -91,6 +91,7 @@ module.exports = {
 
 ```js
 module.exports = {
-	entry: './path/to/my/entry/file.js',
+	// string方式： 单入口，打包形成一个chunk，输出一个buldle文件。chunk的名称默认是main.js
+	entry: './src',
 };
 ```
