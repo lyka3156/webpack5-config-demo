@@ -8,6 +8,6 @@ module.exports = {
 	// 打包输出
 	output: {
 		filename: 'index.js', // 输出文件名
-		path: resolvePath('../dist'), // 输出路劲
+		path: resolvePath('../dist'), // 输出目录路劲
 	},
 };
