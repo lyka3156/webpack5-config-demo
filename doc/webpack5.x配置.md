@@ -81,7 +81,7 @@ module.exports = {
 },
 ```
 
-### 2.2 配置入口 (entry)
+### 2.2 配置入口 ([entry](https://webpack.docschina.org/concepts/entry-points))
 
 `入口起点(entry point)` 指示 webpack 应该使用哪个模块，来作为构建其内部 `依赖图(dependency graph)` 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。
 
@@ -94,7 +94,3 @@ module.exports = {
 	entry: './path/to/my/entry/file.js',
 };
 ```
-
-### 2.3 配置输出 （output）
-
-`output` 属性告诉 webpack 在哪里输出它所创建的 bundle，以及如何命名这些文件。主要输出文件的默认值是 ./dist/main.js，其他生成文件默认放置在 ./dist 文件夹中。
