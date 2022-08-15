@@ -1,6 +1,8 @@
 # webpack5.x 配置
 
 [webpack5.x 官方文档](https://webpack.docschina.org/concepts/)
+[webpack5 配置](https://mp.weixin.qq.com/s/juHpe0Pnrdsrd6imRdbkUg)
+[webpack5 配置](https://juejin.cn/post/6971743815434993671)
 [package.json](https://www.jianshu.com/p/c86d511d99fd)
 [yarn](https://blog.csdn.net/weixin_45942220/article/details/123090688)
 
