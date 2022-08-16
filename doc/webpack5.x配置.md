@@ -344,3 +344,49 @@ module: {
     ],
 },
 ```
+
+#### 6. MiniCssExtractPlugin.loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/#extract-cssextractplugin)
+
+1. 分离样式文件
+2. 前面，我们都是依赖 style-loader 将样式通过 style 标签的形式添加到页面上
+3. 但是，更多时候，我们都希望可以通过 CSS 文件的形式引入到页面上
+
+首先，你需要先安装 mini-css-extract-plugin
+
+```js
+yarn add -D  mini-css-extract-plugin
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.(css|less)$/i,
+            use: [
+                // 将 JS 字符串生成为 style 节点
+                // 'style-loader',
+                // MiniCssExtractPlugin.loader的作用就是把css-loader处理好的样式资源（js文件内），单独提取出来 成为css样式文件
+                MiniCssExtractPlugin.loader, // 生产环境下使用，开发环境还是推荐使用style-loader
+                // 将 CSS 转化成 CommonJS 模块
+                'css-loader',
+                // 使用 PostCSS 处理 CSS 的 loader, 里面可以配置 autoprefixer 添加 CSS 浏览器前缀
+                'postcss-loader',
+                // 将 Less 编译成 CSS
+                'less-loader',
+            ],
+        },
+    ],
+},
+// 插件
+plugins: [
+    // 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
+    new MiniCssExtractPlugin({
+        filename: 'css/[name].[contenthash:8].css',
+        // chunkFilename: 'css/[name].[contenthash:8].css',
+    }),
+],
+```

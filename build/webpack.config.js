@@ -1,7 +1,9 @@
 const path = require('path');
 const resolvePath = (p) => path.resolve(__dirname, p);
-// html模板
+// HtmlWebpackPlugin帮助你创建html文件，并自动引入打包输出的bundles文件。支持html压缩。
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 	// 入口文件
@@ -39,7 +41,9 @@ module.exports = {
 				test: /\.(css|less)$/i,
 				use: [
 					// 将 JS 字符串生成为 style 节点
-					'style-loader',
+					// 'style-loader',
+					// MiniCssExtractPlugin.loader的作用就是把css-loader处理好的样式资源（js文件内），单独提取出来 成为css样式文件
+					MiniCssExtractPlugin.loader, // 生产环境下使用，开发环境还是推荐使用style-loader
 					// 将 CSS 转化成 CommonJS 模块
 					'css-loader',
 					// 使用 PostCSS 处理 CSS 的 loader, 里面可以配置 autoprefixer 添加 CSS 浏览器前缀
@@ -59,6 +63,11 @@ module.exports = {
 			template: resolvePath('../src/index.html'),
 			// 输出后的html文件名
 			filename: 'index.html',
+		}),
+		// 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
+		new MiniCssExtractPlugin({
+			filename: 'css/[name].[contenthash:8].css',
+			// chunkFilename: 'css/[name].[contenthash:8].css',
 		}),
 	],
 };
