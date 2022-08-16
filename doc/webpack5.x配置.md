@@ -198,3 +198,29 @@ module: {
     ],
 },
 ```
+
+#### 3. less-loader [官方地址](https://webpack.docschina.org/loaders/less-loader/)
+
+1. webpack 将 Less 编译为 CSS 的 loader。
+
+首先，你需要先安装 less 和 less-loader：
+
+```js
+yarn add -D less less-loader
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.(css|less)$/i,
+            // use: 对应的 Loader 名称
+            use: ['style-loader', 'css-loader', 'less-loader'],
+        },
+    ],
+},
+```

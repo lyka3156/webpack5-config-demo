@@ -36,9 +36,12 @@ module.exports = {
 		rules: [
 			{
 				// 匹配所有的 css 文件
-				test: /\.css$/,
+				test: /\.(css|less)$/i,
 				// use: 对应的 Loader 名称
-				use: ['style-loader', 'css-loader'],
+				// less-loader将less模块转换成css模块
+				// css-loader将css模块转换成css字符串的js模块
+				// style-loader将css追加到dom中
+				use: ['style-loader', 'css-loader', 'less-loader'],
 			},
 		],
 	},
