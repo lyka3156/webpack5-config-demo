@@ -256,3 +256,91 @@ module: {
     ],
 },
 ```
+
+#### 5. postcss-loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/)
+
+1. 使用 PostCSS 处理 CSS 的 loader
+2. 一般搭配 autoprefixer 为 css 添加浏览器前缀
+
+首先，你需要先安装 sass , sass-loader , autoprefixer
+
+```js
+yarn add -D postcss-loader  postcss autoprefixer
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.(css|less)$/i,
+            use: [
+                // 将 JS 字符串生成为 style 节点
+                'style-loader',
+                // 将 CSS 转化成 CommonJS 模块
+                'css-loader',
+                // 添加 CSS 浏览器前缀
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        postcssOptions: {
+                            plugins: [require('autoprefixer')],
+                        },
+                    },
+                },
+                // 将 Less 编译成 CSS
+                'less-loader',
+            ],
+        },
+    ],
+},
+```
+
+或者使用 PostCSS 本身的 [配置文件](https://webpack.docschina.org/loaders/postcss-loader/#config)
+
+-   创建 `/postcss.config.js`
+    Loader 将会自动搜索配置文件
+
+```js
+// postcss.config.js
+
+// {
+// loader: 'postcss-loader',
+// options: {
+//     postcssOptions: {
+//         plugins: [require('autoprefixer')],
+//     },
+// },
+
+// 导出去的就是postcss - loader里面的options的postcssOptions属性对象
+module.exports = {
+	plugins: [require('autoprefixer')],
+};
+```
+
+-   修改 `/build/webpack.config.js`;
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.(css|less)$/i,
+            use: [
+                // 将 JS 字符串生成为 style 节点
+                'style-loader',
+                // 将 CSS 转化成 CommonJS 模块
+                'css-loader',
+                // 使用 PostCSS 处理 CSS 的 loader, 里面可以配置 autoprefixer 添加 CSS 浏览器前缀
+                'postcss-loader',
+                // 将 Less 编译成 CSS
+                'less-loader',
+            ],
+        },
+    ],
+},
+```

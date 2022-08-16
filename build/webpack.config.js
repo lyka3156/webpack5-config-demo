@@ -36,14 +36,16 @@ module.exports = {
 		rules: [
 			{
 				// 匹配所有的 css 文件
-				test: /\.(css|scss)$/i,
+				test: /\.(css|less)$/i,
 				use: [
 					// 将 JS 字符串生成为 style 节点
 					'style-loader',
 					// 将 CSS 转化成 CommonJS 模块
 					'css-loader',
-					// 将 Sass 编译成 CSS
-					'sass-loader',
+					// 使用 PostCSS 处理 CSS 的 loader, 里面可以配置 autoprefixer 添加 CSS 浏览器前缀
+					'postcss-loader',
+					// 将 Less 编译成 CSS
+					'less-loader',
 				],
 			},
 		],
