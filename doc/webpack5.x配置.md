@@ -390,3 +390,67 @@ plugins: [
     }),
 ],
 ```
+
+#### 2. file 的 loader
+
+Webpack5.0 新增资源模块(asset module)，它是一种模块类型，允许使用资源文件（字体，图标等）而无需 配置额外 loader。支持以下四个配置
+
+1. asset/resource 发送一个单独的文件并导出 URL。之前通过使用 file-loader 实现。
+2. asset/inline 导出一个资源的 data URI。之前通过使用 url-loader 实现。
+3. asset/source 导出资源的源代码。之前通过使用 raw-loader 实现。
+4. asset 在导出一个 data URI 和发送一个单独的文件之间自动选择。之前通过使用 url-loader，并且配置资 源体积限制实现。
+
+##### 1. 图片文件处理
+
+图片小于 10kb 的使用 base64,大于 10kb 的拷贝文件
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+	rules: [
+		{
+			// 匹配图片文件
+			test: /\.(png|jpg|jpeg|gif|svg)$/i,
+			// 在导出一个 data URI 和发送一个单独的文件之间自动选择。之前通过使用 url-loader，并且配置资源体积限制实现。
+			type: 'asset',
+			generator: {
+				// 输出文件位置以及文件名
+				filename: 'images/[name]_[hash:8][ext]',
+				// 打包之后图片的访问公共前缀
+				// publicPath: '../',
+			},
+			parser: {
+				dataUrlCondition: {
+					maxSize: 10 * 1024, // 超过10kb不转 base64
+				},
+			},
+		},
+	];
+}
+```
+
+##### 2. 字体文件的处理
+
+首先，从 [iconfont.cn](https://www.iconfont.cn/home/index?spm=a313x.7781069.1998910419.2) 下载字体文件到本地
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+	rules: [
+		{
+			// 匹配字体文件
+			test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+			// 发送一个单独的文件并导出 URL。之前通过使用 file-loader 实现。
+			type: 'asset/resource',
+			generator: {
+				// 输出文件位置以及文件名
+				filename: 'images/[name]_[hash:8][ext]',
+			},
+		},
+	];
+}
+```

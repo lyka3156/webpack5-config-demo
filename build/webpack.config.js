@@ -17,12 +17,15 @@ module.exports = {
 		// 输出文件目录（将来所有资源输出的公共目录，包括css和静态文件等等）
 		path: resolvePath('../dist'),
 		// 输出文件名，默认main.js
-		filename: 'js/[name][contenthash:8].js',
+		filename: 'js/[name]_[contenthash:8].js',
 		// 所有资源引入公共路径前缀，一般用于生产环境，小心使用
-		publicPath: '',
+		// publicPath: '',
+		// 静态文件打包后的路径及文件名（默认是走全局的，如果有独立的设置就按照自己独立的设置来。）
+		// assetModuleFilename: 'assets/[name]_[hash][ext]',
+
 		// 非入口文件chunk的名称。所谓非入口即import动态导入形成的chunk或者optimization中的splitChunks提取的公共chunk
 		// 它支持和 filename 一致的内置变量
-		chunkFilename: '[name][contenthash:8].chunk.js',
+		chunkFilename: '[name]_[contenthash:8].chunk.js',
 		// 打包前清空输出目录，相当于clean-webpack-plugin插件的作用,webpack5新增。
 		clean: true,
 		// 当用 Webpack 去构建一个可以被其他模块导入使用的库时需要用到library   (自己写插件的时候用到)
@@ -52,6 +55,33 @@ module.exports = {
 					'less-loader',
 				],
 			},
+			{
+				// 匹配字体文件
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+				// 发送一个单独的文件并导出 URL。之前通过使用 file-loader 实现。
+				type: 'asset/resource',
+				generator: {
+					// 输出文件位置以及文件名
+					filename: 'fonts/[name]_[hash:8][ext]',
+				},
+			},
+			{
+				// 匹配图片文件
+				test: /\.(png|jpg|jpeg|gif|svg)$/i,
+				// 在导出一个 data URI 和发送一个单独的文件之间自动选择。之前通过使用 url-loader，并且配置资源体积限制实现。
+				type: 'asset',
+				generator: {
+					// 输出文件位置以及文件名
+					filename: 'images/[name]_[hash:8][ext]',
+					// 打包之后图片的访问公共前缀
+					// publicPath: '../',
+				},
+				parser: {
+					dataUrlCondition: {
+						maxSize: 10 * 1024, // 超过10kb不转 base64
+					},
+				},
+			},
 		],
 	},
 
@@ -66,8 +96,8 @@ module.exports = {
 		}),
 		// 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
 		new MiniCssExtractPlugin({
-			filename: 'css/[name].[contenthash:8].css',
-			// chunkFilename: 'css/[name].[contenthash:8].css',
+			filename: 'css/[name]_[contenthash:8].css',
+			// chunkFilename: 'css/[name]_[contenthash:8].css',
 		}),
 	],
 };

@@ -1,6 +1,10 @@
 import './index.css'; // css-loader
 import './index.less'; // less-loader
-// webpack打包测试
+
+import logo from './assets/images/logo.jpg';
+const img = new Image();
+img.src = logo;
+document.getElementById('imgBox').appendChild(img);
 
 const sum = (a, b) => {
 	return a + b;
