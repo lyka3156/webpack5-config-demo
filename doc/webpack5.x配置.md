@@ -172,7 +172,7 @@ module: {
 },
 ```
 
-#### 2. style-loader [官方地址](https://webpack.docschina.org/loaders/style-loader/)
+##### 2. style-loader [官方地址](https://webpack.docschina.org/loaders/style-loader/)
 
 1. style-loader 把 css 插入到 DOM 中
 2. 推荐将 style-loader 与 css-loader 一起使用
@@ -199,7 +199,7 @@ module: {
 },
 ```
 
-#### 3. less-loader [官方地址](https://webpack.docschina.org/loaders/less-loader/)
+##### 3. less-loader [官方地址](https://webpack.docschina.org/loaders/less-loader/)
 
 1. webpack 将 Less 编译为 CSS 的 loader。
 
@@ -225,7 +225,7 @@ module: {
 },
 ```
 
-#### 4. sass-loader [官方地址](https://webpack.docschina.org/loaders/sass-loader/)
+##### 4. sass-loader [官方地址](https://webpack.docschina.org/loaders/sass-loader/)
 
 1. 加载 Sass/SCSS 文件并将他们编译为 CSS。
 
@@ -257,7 +257,7 @@ module: {
 },
 ```
 
-#### 5. postcss-loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/)
+##### 5. postcss-loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/)
 
 1. 使用 PostCSS 处理 CSS 的 loader
 2. 一般搭配 autoprefixer 为 css 添加浏览器前缀
@@ -345,7 +345,7 @@ module: {
 },
 ```
 
-#### 6. MiniCssExtractPlugin.loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/#extract-cssextractplugin)
+##### 6. MiniCssExtractPlugin.loader [官方地址](https://webpack.docschina.org/loaders/postcss-loader/#extract-cssextractplugin)
 
 1. 分离样式文件
 2. 前面，我们都是依赖 style-loader 将样式通过 style 标签的形式添加到页面上
