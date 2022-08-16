@@ -13,6 +13,6 @@ module.exports = {
 		app: './src/app.js',
 	},
 	output: {
-		clean: true,
+		clean: true, // 清除上一次打包的目录
 	},
 };
