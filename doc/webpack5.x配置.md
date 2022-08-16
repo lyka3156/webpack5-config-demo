@@ -95,7 +95,7 @@ module.exports = {
 };
 ```
 
-### 2.3 配置输出 （output）[文档地址](https://webpack.docschina.org/configuration/output)
+### 2.3 配置输出 (output)[文档地址](https://webpack.docschina.org/configuration/output)
 
 `output` 属性告诉 webpack 在哪里输出它所创建的 bundle，以及如何命名这些文件。主要输出文件的默认值是 `./dist/main.js`，其他生成文件默认放置在 `./dist` 文件夹中。
 
@@ -132,4 +132,69 @@ module.exports = {
 		// },
 	},
 };
+```
+
+### 2.4 配置 loader [文档地址](https://webpack.docschina.org/concepts/loaders/)
+
+官方介绍：loader 用于对模块的源代码进行转换。loader 可以使你在 import 或 "load(加载)" 模块时预处理文件。因此，loader 类似于其他构建工具中“任务(task)”，并提供了处理前端构建步骤的得力方式。loader 可以将文件从不同的语言（如 TypeScript）转换为 JavaScript 或将内联图像转换为 data URL。loader 甚至允许你直接在 JavaScript 模块中 import CSS 文件！
+
+总结：Webpack 只能解析 JavaScript 和 json 文件，不能处理其他文件，Loader 就是将 Webpack 不认识的内容转化为认识的内容。
+
+下面是一些常用的 loader
+
+#### 1. css 的 loader
+
+##### 1. css-loader [文档地址](https://webpack.docschina.org/loaders/css-loader/)
+
+1. 加载 CSS 文件并解析 import 的 CSS 文件，最终返回 CSS 代码
+2. 主要来处理 background:(url)还有@import 这些语法。让 webpack 能够正确的对其路径进行模块化处理
+3. 将 css 文件转换成 webpack 认识的 js 文件
+
+首先，你需要先安装 `css-loader`
+
+```js
+yarn add -D css-loader
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.css$/,
+            // use: 对应的 Loader 名称
+            use: 'css-loader',
+        },
+    ],
+},
+```
+
+#### 2. style-loader [官方地址](https://webpack.docschina.org/loaders/style-loader/)
+
+1. style-loader 把 css 插入到 DOM 中
+2. 推荐将 style-loader 与 css-loader 一起使用
+
+首先，你需要先安装 `style-loader`
+
+```js
+yarn add -D style-loader
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.css$/,
+            // use: 对应的 Loader 名称
+            use: ['style-loader', 'css-loader'],
+        },
+    ],
+},
 ```

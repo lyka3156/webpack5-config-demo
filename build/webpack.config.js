@@ -1,11 +1,13 @@
 const path = require('path');
 const resolvePath = (p) => path.resolve(__dirname, p);
+// html模板
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	// 入口文件
 	entry: './src/index.js',
 
-	// 生产模式打包     devlopment/production
+	// 开发模式打包     devlopment/production
 	mode: 'development',
 
 	// 打包输出
@@ -29,4 +31,26 @@ module.exports = {
 		// 	type: 'window',
 		// },
 	},
+	// 模块匹配规则: 在这里为模块配置loader
+	module: {
+		rules: [
+			{
+				// 匹配所有的 css 文件
+				test: /\.css$/,
+				// use: 对应的 Loader 名称
+				use: ['style-loader', 'css-loader'],
+			},
+		],
+	},
+
+	// 插件
+	plugins: [
+		// 把打包后的资源文件，例如：js 或者 css 文件可以自动引入到 Html 中
+		new HtmlWebpackPlugin({
+			// 模板html地址
+			template: resolvePath('../src/index.html'),
+			// 输出后的html文件名
+			filename: 'index.html',
+		}),
+	],
 };
