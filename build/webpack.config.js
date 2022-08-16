@@ -38,10 +38,14 @@ module.exports = {
 				// 匹配所有的 css 文件
 				test: /\.(css|less)$/i,
 				// use: 对应的 Loader 名称
-				// less-loader将less模块转换成css模块
-				// css-loader将css模块转换成css字符串的js模块
-				// style-loader将css追加到dom中
-				use: ['style-loader', 'css-loader', 'less-loader'],
+				use: [
+					// 将 JS 字符串生成为 style 节点
+					'style-loader',
+					// 将 CSS 转化成 CommonJS 模块
+					'css-loader',
+					// 将 Less 编译成 CSS
+					'less-loader',
+				],
 			},
 		],
 	},

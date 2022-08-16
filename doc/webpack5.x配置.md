@@ -193,7 +193,14 @@ module: {
             // 匹配所有的 css 文件
             test: /\.css$/,
             // use: 对应的 Loader 名称
-            use: ['style-loader', 'css-loader'],
+            use: [
+                // 将 JS 字符串生成为 style 节点
+                'style-loader',
+                // 将 CSS 转化成 CommonJS 模块
+                'css-loader',
+                // 将 Less 编译成 CSS
+                'less-loader',
+            ],
         },
     ],
 },
