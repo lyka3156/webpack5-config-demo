@@ -81,7 +81,7 @@ module.exports = {
 },
 ```
 
-### 2.2 配置入口 ([entry](https://webpack.docschina.org/concepts/entry-points))
+### 2.2 配置入口 (entry)[文档地址](https://webpack.docschina.org/concepts/entry-points))
 
 `入口起点(entry point)` 指示 webpack 应该使用哪个模块，来作为构建其内部 `依赖图(dependency graph)` 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。
 
@@ -91,6 +91,7 @@ module.exports = {
 
 ```js
 module.exports = {
-	entry: './path/to/my/entry/file.js',
+	// 入口文件
+	entry: './src/index.js',
 };
 ```
