@@ -1,5 +1,5 @@
 import './index.css'; // css-loader
-import './index.less'; // less-loader
+import './index.scss'; // sasss-loader
 // webpack打包测试
 
 const sum = (a, b) => {

@@ -224,3 +224,35 @@ module: {
     ],
 },
 ```
+
+#### 4. sass-loader [官方地址](https://webpack.docschina.org/loaders/sass-loader/)
+
+1. 加载 Sass/SCSS 文件并将他们编译为 CSS。
+
+首先，你需要先安装 sass 和 sass-loader：
+
+```js
+yarn add -D sass sass-loader
+```
+
+`webpack.config.js`
+
+```js
+// 模块匹配规则: 在这里为模块配置loader
+module: {
+    rules: [
+        {
+            // 匹配所有的 css 文件
+            test: /\.(css|scss)$/i,
+            use: [
+                // 将 JS 字符串生成为 style 节点
+                'style-loader',
+                // 将 CSS 转化成 CommonJS 模块
+                'css-loader',
+                // 将 Sass 编译成 CSS
+                'sass-loader',
+            ],
+        },
+    ],
+},
+```
