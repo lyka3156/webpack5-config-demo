@@ -8,13 +8,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // 将已存在的单个文件或整个目录复制到打包目录
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
 	// 入口文件
 	entry: './src/index.js',
 
 	// 开发模式打包     development/production
-	mode: 'production',
+	mode: 'development',
 
 	// 打包输出
 	output: {
@@ -127,6 +128,16 @@ module.exports = {
 				// from: 从哪里  to: 到哪里
 				{ from: 'src/static', to: 'static' },
 			],
+		}),
+		// 定义全局变量
+		new webpack.DefinePlugin({
+			PRODUCTION: JSON.stringify(true), // true
+			VERSION: JSON.stringify('5fa3b9'), // '5fa3b9'
+			BROWSER_SUPPORTS_HTML5: true, // true
+			TWO: '1+1', // 2
+			'typeof window': JSON.stringify('object'), // `object`
+			// 用来区分环境
+			// 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 		}),
 	],
 	// 优化

@@ -748,3 +748,40 @@ module.exports = {
 	],
 };
 ```
+
+#### 5. DefinePlugin [文档地址](https://webpack.docschina.org/plugins/define-plugin/)
+
+`DefinePlugin` 允许在 编译时 将你代码中的变量替换为其他值或表达式。
+这在需要根据开发模式与生产模式进行不同的操作时，非常有用。
+例如，如果想在开发构建中进行日志记录，而不在生产构建中进行，就可以定义一个全局常量去判断是否记录日志。
+这就是 DefinePlugin 的发光之处，设置好它，就可以忘掉开发环境和生产环境的构建规则。
+
+基本用法
+
+传递给 DefinePlugin 的每个键都是一个标识符或多个以 . 连接的标识符。
+
+-   如果该值为字符串，它将被作为代码片段来使用。
+-   如果该值不是字符串，则将被转换成字符串（包括函数方法）。
+-   如果值是一个对象，则它所有的键将使用相同方法定义。
+-   如果键添加 typeof 作为前缀，它会被定义为 typeof 调用。
+
+```js
+module.exports = {
+	plugins: [
+		// 定义全局变量
+		new webpack.DefinePlugin({
+			PRODUCTION: JSON.stringify(true), // true
+			VERSION: JSON.stringify('5fa3b9'), // '5fa3b9'
+			BROWSER_SUPPORTS_HTML5: true, // true
+			TWO: '1+1', // 2
+			'typeof window': JSON.stringify('object'), // `object`
+			// 用来区分环境
+			// 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+		}),
+	],
+};
+```
+
+Tips
+
+` 请注意，由于本插件会直接替换文本，因此提供的值必须在字符串本身 中再包含一个 实际的引号 。通常，可以使用类似 '"production"' 这样的替换引号，或者直接用 JSON.stringify('production')。`

@@ -43,4 +43,26 @@ function log(text) {
 const test = new MyClass();
 console.log(test, 2222, test.logger());
 
+// DefinePlugin 的使用
+// PRODUCTION: JSON.stringify(true),
+// VERSION: JSON.stringify('5fa3b9'),
+// BROWSER_SUPPORTS_HTML5: true,
+// TWO: '1+1',
+// 'typeof window': JSON.stringify('object'),
+console.log('-- DefinePlugin的使用 --');
+console.log('PRODUCTION: JSON.stringify(true):', typeof PRODUCTION, PRODUCTION);
+console.log(`VERSION: JSON.stringify('5fa3b9'):`, typeof VERSION, VERSION);
+console.log(
+	`BROWSER_SUPPORTS_HTML5: true:`,
+	typeof BROWSER_SUPPORTS_HTML5,
+	BROWSER_SUPPORTS_HTML5
+);
+console.log(`TWO: '1+1':`, typeof TWO, TWO);
+console.log(
+	`typeof window': JSON.stringify('object'):`,
+	typeof typeof window,
+	typeof window
+);
+console.log('-- DefinePlugin的使用 --');
+
 export { sum, Person };
