@@ -632,3 +632,46 @@ module.exports = {
 如果你有多个 webpack 入口，他们都会在已生成 HTML 文件中的 `<script>` 标签内引入。
 
 如果在 webpack 的输出中有任何 CSS 资源（例如，使用 [MiniCssExtractPlugin](https://webpack.docschina.org/plugins/mini-css-extract-plugin/) 提取的 CSS），那么这些资源也会在 HTML 文件 `<head>` 元素中的 `<link>` 标签内引入。
+
+#### 2. MiniCssExtractPlugin [文档地址](https://webpack.docschina.org/plugins/mini-css-extract-plugin/)
+
+本插件会将 CSS 提取到单独的文件中，为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载。
+
+安装
+
+```js
+yarn add -D mini-css-extract-plugin
+```
+
+基本用法
+
+-   建议 mini-css-extract-plugin 与 css-loader 一起使用
+
+```js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+module.exports = {
+	module: {
+		rules: [
+			{
+				// 匹配所有的 css 文件
+				test: /\.css$/i,
+				use: [
+					// 将 JS 字符串生成为 style 节点
+					// 'style-loader',
+					// MiniCssExtractPlugin.loader的作用就是把css-loader处理好的样式资源（js文件内），单独提取出来 成为css样式文件
+					MiniCssExtractPlugin.loader, // 生产环境下使用，开发环境还是推荐使用style-loader
+					// 将 CSS 转化成 CommonJS 模块
+					'css-loader',
+				],
+			},
+		],
+	},
+	plugins: [
+		// 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
+		new MiniCssExtractPlugin({
+			filename: 'css/[name]_[contenthash:8].css',
+			// chunkFilename: 'css/[name]_[contenthash:8].css',
+		}),
+	],
+};
+```
