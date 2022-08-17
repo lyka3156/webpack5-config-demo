@@ -834,3 +834,64 @@ Tips
 
 -   ` 请注意，由于本插件会直接替换文本，因此提供的值必须在字符串本身 中再包含一个 实际的引号 。通常，可以使用类似 '"production"' 这样的替换引号，或者直接用 JSON.stringify('production')。`
 -   注意: 它定义的全局变量只是在代码层次上,也就是每个 js 模块里面都能访问次变量,不会定义到 window 上面去
+
+#### 7. 其他的插件 [文档地址](https://webpack.docschina.org/plugins/)
+
+<table>
+    <thead>
+    <tr>
+        <th style="text-align: left">插件</th>
+        <th style="text-align: left">解决问题</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: left">case-sensitive-paths-webpack-plugin</td>
+        <td style="text-align: left">
+        如果路径有误则直接报错
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">pnp-webpack-plugin</td>
+        <td style="text-align: left">
+        Yarn Plug'n'Play插件
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">webpack-manifest-plugin</td>
+        <td style="text-align: left">
+        生产资产的显示清单文件
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">ModuleScopePlugin</td>
+        <td style="text-align: left">
+        如果引用了src目录外的文件报警插件
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">InterpolateHtmlPlugin</td>
+        <td style="text-align: left">
+        和HtmlWebpackPlugin串行使用，允许在index.html中添加变量
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">ModuleNotFoundPlugin</td>
+        <td style="text-align: left">
+        找不到模块的时候提供一些更详细的上下文信息
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">HotModuleReplacementPlugin</td>
+        <td style="text-align: left">
+        启用模块热替换
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">WatchMissingNodeModulesPlugin</td>
+        <td style="text-align: left">
+        :此插件允许你安装库后自动重新构建打包文件
+        </td>
+    </tr>
+    </tbody>
+</table>
