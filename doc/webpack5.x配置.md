@@ -719,7 +719,55 @@ module.exports = {
 };
 ```
 
-#### 4. CopyWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/copy-webpack-plugin)
+#### 4. TerserWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/terser-webpack-plugin/)
+
+该插件使用 [terser](https://github.com/terser/terser) 来压缩 JavaScript
+
+webpack v5 开箱即带有最新版本的 `terser-webpack-plugin`。如果你使用的是 webpack v5 或更高版本，同时希望自定义配置，那么仍需要安装 `terser-webpack-plugin`。如果使用 webpack v4，则必须安装 `terser-webpack-plugin` v4 的版本
+
+安装
+
+```js
+yarn add -D terser-webpack-plugin
+```
+
+基本用法
+
+```js
+const TerserPlugin = require('terser-webpack-plugin');
+
+module.exports = {
+	// 优化
+	optimization: {
+		minimizer: [
+			// 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+			// `...`,
+			// 自定义配置压缩js的规则,不使用webpack5自带的压缩js规则
+			// https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+			new TerserPlugin({
+				terserOptions: {
+					parallel: true, // 启用/禁用多进程并发运行功能
+					// cache: true,
+					compress: {
+						warnings: true, // 是否去除warnig
+						// drop_console: process.env.BUILD_ENV === 'prod', // 是否去除console
+					},
+					// output: {
+					// 	comments: false,
+					// 	// comments: /Build in/i
+					// },
+					safari10: true,
+				},
+				extractComments: false, // 启用/禁用剥离注释功能
+			}),
+		],
+		// 如果还想在开发环境下启用 CSS 优化，请将 optimization.minimize 设置为 true:
+		// minimize: true,
+	},
+};
+```
+
+#### 5. CopyWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/copy-webpack-plugin)
 
 将已存在的单个文件或整个目录复制到打包目录
 
