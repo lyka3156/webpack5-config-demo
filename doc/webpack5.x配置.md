@@ -718,3 +718,33 @@ module.exports = {
 	},
 };
 ```
+
+#### 4. CopyWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/copy-webpack-plugin)
+
+将已存在的单个文件或整个目录复制到打包目录
+
+安装
+
+```js
+yarn add -D copy-webpack-plugin
+```
+
+基本用法
+
+-   例如: 我要把 src/static 目录的所有静态文件原封不动的全部拷贝一份到打包目录 static 中
+
+```js
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+module.exports = {
+	plugins: [
+		// 拷贝文件或者目录
+		new CopyWebpackPlugin({
+			patterns: [
+				// from: 从哪里  to: 到哪里
+				{ from: 'src/static', to: 'static' },
+			],
+		}),
+	],
+};
+```

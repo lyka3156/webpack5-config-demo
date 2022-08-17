@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // 压缩css
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// 将已存在的单个文件或整个目录复制到打包目录
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	// 入口文件
@@ -118,6 +120,13 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: 'css/[name]_[contenthash:8].css',
 			// chunkFilename: 'css/[name]_[contenthash:8].css',
+		}),
+		// 拷贝文件或者目录
+		new CopyWebpackPlugin({
+			patterns: [
+				// from: 从哪里  to: 到哪里
+				{ from: 'src/static', to: 'static' },
+			],
 		}),
 	],
 	// 优化
