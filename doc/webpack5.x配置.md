@@ -953,3 +953,32 @@ module.exports = {
 ```js
 yarn dev
 ```
+
+### 2.7 配置 mode 工作模式 [文档地址](https://webpack.docschina.org/configuration/mode/)
+
+提供 `mode` 配置选项，告知 webpack 使用相应模式的内置优化。
+
+-   none
+    -   不使用任何默认优化选项
+-   development 开发模式
+    -   会将 `DefinePlugin` 中 `process.env.NODE_ENV` 的值设置为 `development`. 为模块和 chunk 启用有效的名。
+-   production 生产模式
+    -   会将 `DefinePlugin` 中 `process.env.NODE_ENV` 的值设置为 `production`。为模块和 chunk 启用确定性的混淆名称，`FlagDependencyUsagePlugin`，`FlagIncludedChunksPlugin`，`ModuleConcatenationPlugin`，`NoEmitOnErrorsPlugin` 和 `TerserPlugin` 。
+
+如果没有设置，webpack 会给 mode 的默认值设置为 `production`。
+
+用法
+
+只需在配置对象中提供 `mode` 选项：
+
+```js
+module.exports = {
+	mode: 'development',
+};
+```
+
+或者从 CLI 参数中传递：
+
+```js
+webpack --mode=development
+```
