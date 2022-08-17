@@ -64,6 +64,11 @@ module.exports = {
 					// 输出文件位置以及文件名
 					filename: 'fonts/[name]_[hash:8][ext]',
 				},
+				// parser: {
+				// 	dataUrlCondition: {
+				// 		maxSize: 10 * 1024, // 超过10kb不转 base64
+				// 	},
+				// },
 			},
 			{
 				// 匹配图片文件
