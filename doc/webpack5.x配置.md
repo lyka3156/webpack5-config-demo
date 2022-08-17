@@ -589,3 +589,46 @@ yarn add -D @babel/plugin-proposal-decorators @babel/plugin-proposal-class-prope
 	}
 }
 ```
+
+### 2.5 配置 plugin [文档地址](https://webpack.docschina.org/plugins/)
+
+1. 与 Loader 用于转换特定类型的文件不同，插件（Plugin）可以贯穿 Webpack 打包的生命周期，执行不同的任务
+2. 可以用于执行范围更广的任务。从打包优化和压缩，一直到重新定义环境中的变量等
+
+#### 1. HtmlWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/html-webpack-plugin/)
+
+该插件将为你生成一个 HTML5 文件， 在 body 中使用 script 标签引入你所有 webpack 生成的 bundle。 只需添加该插件到你的 webpack 配置中
+
+安装
+
+```js
+yarn add -D html-webpack-plugin
+```
+
+基本用法
+
+```js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const resolvePath = (p) => path.resolve(__dirname, p);
+module.exports = {
+	entry: './src/index.js',
+	output: {
+		path: path.resolve(__dirname, './dist'),
+		filename: 'js/[name]_[contenthash:8].js',
+	},
+	plugins: [
+		// 把打包后的资源文件，例如：js 或者 css 文件可以自动引入到 Html 中
+		new HtmlWebpackPlugin({
+			// 模板html地址
+			template: resolvePath('../src/index.html'),
+			// 输出后的html文件名
+			filename: 'index.html',
+		}),
+	],
+};
+```
+
+如果你有多个 webpack 入口，他们都会在已生成 HTML 文件中的 `<script>` 标签内引入。
+
+如果在 webpack 的输出中有任何 CSS 资源（例如，使用 [MiniCssExtractPlugin](https://webpack.docschina.org/plugins/mini-css-extract-plugin/) 提取的 CSS），那么这些资源也会在 HTML 文件 `<head>` 元素中的 `<link>` 标签内引入。
