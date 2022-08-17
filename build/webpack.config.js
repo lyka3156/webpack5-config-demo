@@ -43,6 +43,7 @@ module.exports = {
 		// 	type: 'window',
 		// },
 	},
+
 	// 模块匹配规则: 在这里为模块配置loader
 	module: {
 		rules: [
@@ -110,6 +111,32 @@ module.exports = {
 		],
 	},
 
+	// 开发服务器
+	devServer: {
+		// 运行代码的目录   老版写法: 		contentBase: resolvePath('dist'),
+		static: {
+			directory: resolvePath('dist'),
+		},
+		// 为每个静态文件开启gzip压缩
+		compress: true,
+		host: 'localhost', // 域名
+		port: 9000, // 端口号
+		// open: true, // 自动打开浏览器
+		hot: true, //开启HMR功能
+		// 设置代理
+		proxy: {
+			// 一旦devServer(9000端口)接收到/api/xxx的请求，就会用devServer起的服务把请求转发到另外一个服务器（3000）
+			// 以此来解决开发中的跨域问题
+			api: {
+				target: 'htttp://localhost:3000',
+				// 发送请求时，请求路径重写：将/api/xxx  --> /xxx （去掉/api）
+				pathRewrite: {
+					'^api': '',
+				},
+			},
+		},
+	},
+
 	// 插件
 	plugins: [
 		// 把打包后的资源文件，例如：js 或者 css 文件可以自动引入到 Html 中
@@ -142,6 +169,7 @@ module.exports = {
 			// 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 		}),
 	],
+
 	// 优化
 	optimization: {
 		minimizer: [

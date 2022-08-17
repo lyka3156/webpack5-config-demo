@@ -895,3 +895,61 @@ Tips
     </tr>
     </tbody>
 </table>
+
+### 2.6 配置 devServer [文档地址](https://webpack.docschina.org/configuration/dev-server#root)
+
+[webpack-dev-server](https://github.com/webpack/webpack-dev-server) 可用于快速开发应用程序。请查阅 开发指南 开始使用。
+
+安装
+
+```js
+yarn add -D  webpack-dev-server
+```
+
+配置本地服务
+
+```js
+const path = require('path');
+const resolvePath = (p) => path.resolve(__dirname, p);
+module.exports = {
+	// 开发服务器
+	devServer: {
+		// 运行代码的目录   老版写法: 		contentBase: resolvePath('dist'),
+		static: {
+			directory: resolvePath('dist'),
+		},
+		// 为每个静态文件开启gzip压缩
+		compress: true,
+		host: 'localhost', // 域名
+		port: 9000, // 端口号
+		// open: true, // 自动打开浏览器
+		hot: true, //开启HMR功能
+		// 设置代理
+		proxy: {
+			// 一旦devServer(9000端口)接收到/api/xxx的请求，就会用devServer起的服务把请求转发到另外一个服务器（3000）
+			// 以此来解决开发中的跨域问题
+			api: {
+				target: 'htttp://localhost:3000',
+				// 发送请求时，请求路径重写：将/api/xxx  --> /xxx （去掉/api）
+				pathRewrite: {
+					'^api': '',
+				},
+			},
+		},
+	},
+};
+```
+
+在`package.json`文件配置启动本地服务脚本
+
+```js
+"scripts": {
+		"dev": "webpack serve --config ./build/webpack.config.js"
+},
+```
+
+启动本地服务
+
+```js
+yarn dev
+```
