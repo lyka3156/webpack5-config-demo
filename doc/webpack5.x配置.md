@@ -719,70 +719,50 @@ module.exports = {
 };
 ```
 
-#### 4. CopyWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/copy-webpack-plugin)
+#### 4. TerserWebpackPlugin [文档地址](https://webpack.docschina.org/plugins/terser-webpack-plugin/)
 
-将已存在的单个文件或整个目录复制到打包目录
+该插件使用 [terser](https://github.com/terser/terser) 来压缩 JavaScript
+
+webpack v5 开箱即带有最新版本的 `terser-webpack-plugin`。如果你使用的是 webpack v5 或更高版本，同时希望自定义配置，那么仍需要安装 `terser-webpack-plugin`。如果使用 webpack v4，则必须安装 `terser-webpack-plugin` v4 的版本
 
 安装
 
 ```js
-yarn add -D copy-webpack-plugin
+yarn add -D terser-webpack-plugin
 ```
 
 基本用法
 
--   例如: 我要把 src/static 目录的所有静态文件原封不动的全部拷贝一份到打包目录 static 中
-
 ```js
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-	plugins: [
-		// 拷贝文件或者目录
-		new CopyWebpackPlugin({
-			patterns: [
-				// from: 从哪里  to: 到哪里
-				{ from: 'src/static', to: 'static' },
-			],
-		}),
-	],
+	// 优化
+	optimization: {
+		minimizer: [
+			// 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+			// `...`,
+			// 自定义配置压缩js的规则,不使用webpack5自带的压缩js规则
+			// https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+			new TerserPlugin({
+				terserOptions: {
+					parallel: true, // 启用/禁用多进程并发运行功能
+					// cache: true,
+					compress: {
+						warnings: true, // 是否去除warnig
+						// drop_console: process.env.BUILD_ENV === 'prod', // 是否去除console
+					},
+					// output: {
+					// 	comments: false,
+					// 	// comments: /Build in/i
+					// },
+					safari10: true,
+				},
+				extractComments: false, // 启用/禁用剥离注释功能
+			}),
+		],
+		// 如果还想在开发环境下启用 CSS 优化，请将 optimization.minimize 设置为 true:
+		// minimize: true,
+	},
 };
 ```
-
-#### 5. DefinePlugin [文档地址](https://webpack.docschina.org/plugins/define-plugin/)
-
-`DefinePlugin` 允许在 编译时 将你代码中的变量替换为其他值或表达式。
-这在需要根据开发模式与生产模式进行不同的操作时，非常有用。
-例如，如果想在开发构建中进行日志记录，而不在生产构建中进行，就可以定义一个全局常量去判断是否记录日志。
-这就是 DefinePlugin 的发光之处，设置好它，就可以忘掉开发环境和生产环境的构建规则。
-
-基本用法
-
-传递给 DefinePlugin 的每个键都是一个标识符或多个以 . 连接的标识符。
-
--   如果该值为字符串，它将被作为代码片段来使用。
--   如果该值不是字符串，则将被转换成字符串（包括函数方法）。
--   如果值是一个对象，则它所有的键将使用相同方法定义。
--   如果键添加 typeof 作为前缀，它会被定义为 typeof 调用。
-
-```js
-module.exports = {
-	plugins: [
-		// 定义全局变量
-		new webpack.DefinePlugin({
-			PRODUCTION: JSON.stringify(true), // true
-			VERSION: JSON.stringify('5fa3b9'), // '5fa3b9'
-			BROWSER_SUPPORTS_HTML5: true, // true
-			TWO: '1+1', // 2
-			'typeof window': JSON.stringify('object'), // `object`
-			// 用来区分环境
-			// 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-		}),
-	],
-};
-```
-
-Tips
-
--   ` 请注意，由于本插件会直接替换文本，因此提供的值必须在字符串本身 中再包含一个 实际的引号 。通常，可以使用类似 '"production"' 这样的替换引号，或者直接用 JSON.stringify('production')。`
--   注意: 它定义的全局变量只是在代码层次上,也就是每个 js 模块里面都能访问次变量,不会定义到 window 上面去
