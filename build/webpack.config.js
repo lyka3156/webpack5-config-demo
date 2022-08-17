@@ -4,13 +4,15 @@ const resolvePath = (p) => path.resolve(__dirname, p);
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 压缩css
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
 	// 入口文件
 	entry: './src/index.js',
 
-	// 开发模式打包     devlopment/production
-	mode: 'none',
+	// 开发模式打包     development/production
+	mode: 'production',
 
 	// 打包输出
 	output: {
@@ -118,4 +120,15 @@ module.exports = {
 			// chunkFilename: 'css/[name]_[contenthash:8].css',
 		}),
 	],
+	// 优化
+	optimization: {
+		minimizer: [
+			// 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+			`...`,
+			// 启动css压缩  一般在生产模式配置,开发环境不配置,可以通过环境来配置是否压缩css
+			new CssMinimizerPlugin(),
+		],
+		// 如果还想在开发环境下启用 CSS 优化，请将 optimization.minimize 设置为 true:
+		// minimize: true,
+	},
 };
