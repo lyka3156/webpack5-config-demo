@@ -131,7 +131,7 @@ module.exports = {
 			// https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
 			new TerserPlugin({
 				terserOptions: {
-					parallel: true, // 启用/禁用多进程并发运行功能
+					// parallel: true, // 启用/禁用多进程并发运行功能
 					// cache: true,
 					compress: {
 						warnings: true, // 是否去除warnig
