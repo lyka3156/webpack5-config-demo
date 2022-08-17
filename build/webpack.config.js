@@ -10,7 +10,7 @@ module.exports = {
 	entry: './src/index.js',
 
 	// 开发模式打包     devlopment/production
-	mode: 'development',
+	mode: 'none',
 
 	// 打包输出
 	output: {
@@ -84,6 +84,19 @@ module.exports = {
 				parser: {
 					dataUrlCondition: {
 						maxSize: 10 * 1024, // 超过10kb不转 base64
+					},
+				},
+			},
+			{
+				// 匹配js文件
+				test: /\.m?js$/,
+				// 不包含哪些目录
+				exclude: /(node_modules)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						// 将 babel-loader 提速至少两倍。这会将转译的结果缓存到文件系统中
+						// cacheDirectory: true,
 					},
 				},
 			},

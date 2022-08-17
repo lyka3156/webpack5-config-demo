@@ -454,3 +454,138 @@ module: {
 	];
 }
 ```
+
+#### 3. js 的 loader
+
+##### 1. babel-loader [官方地址](https://webpack.docschina.org/loaders/babel-loader/)
+
+1. 在开发中我们想使用最新的 Js 特性，但是有些新特性的浏览器支持并不是很好，所以 Js 也需要做兼容处理，常见的就是将 ES6 语法转化为 ES5。
+2. babel-loader 就是用来处理 js 兼容的 loader
+
+首先，你需要先安装 `babel-loader` `@babel/core`
+
+-   babel-loader 使用 Babel 加载 ES2015+ 代码并将其转换为 ES5
+-   @babel/core Babel 编译的核心包
+
+```js
+yarn add -D babel-loader @babel/core
+```
+
+###### 1. 配置 Babel 预设
+
+安装 `@babel/preset-env`
+
+-   @babel/preset-env Babel 编译的预设，可以理解为 Babel 插件的超集
+    -   将 es6+的语法转换成浏览器识别的 js 语法
+
+```js
+yarn add -D @babel/preset-env
+```
+
+`webpack.config.js`
+
+```js
+module: {
+	rules: [
+		{
+			// 匹配js文件
+			test: /\.js$/,
+			// 不包含哪些目录
+			exclude: /(node_modules)/,
+			use: {
+				loader: 'babel-loader',
+				options: {
+					presets: ['@babel/preset-env'],
+					// 将 babel-loader 提速至少两倍。这会将转译的结果缓存到文件系统中
+					// cacheDirectory: true,
+				},
+			},
+		},
+	];
+}
+```
+
+为了避免 webpack.config.js 太臃肿，建议将 Babel 配置文件提取出来
+
+根目录下新增 .babelrc.js
+
+```js
+// ./babelrc.js
+
+module.exports = {
+	presets: [
+		[
+			'@babel/preset-env',
+			{
+				// useBuiltIns: false 默认值，无视浏览器兼容配置，引入所有 polyfill
+				// useBuiltIns: entry 根据配置的浏览器兼容，引入浏览器不兼容的 polyfill
+				// useBuiltIns: usage 会根据配置的浏览器兼容，以及你代码中用到的 API 来进行 polyfill，实现了按需添加
+				useBuiltIns: 'entry',
+				corejs: '3.9.1', // 是 core-js 版本号
+				targets: {
+					chrome: '58',
+					ie: '11',
+				},
+			},
+		],
+	],
+};
+```
+
+常见 Babel 预设还有：
+
+-   @babel/preset-flow
+    -   将 flow 语法 转换成浏览器识别的 js 代码
+-   @babel/preset-react
+    -   将 react 转换成浏览器识别的 js 代码
+-   @babel/preset-typescript
+    -   将 ts 语法 转换成浏览器识别的 js 代码
+
+###### 2. 配置 Babel 插件
+
+对于正在提案中，还未进入 ECMA 规范中的新特性，Babel 是无法进行处理的，必须要安装对应的插件，例如：
+
+```js
+// ./ index.js
+
+// 新增装饰器的使用
+@log('打印log')
+class MyClass {}
+
+function log(text) {
+	return function (target) {
+		target.prototype.logger = () => `${text}，${target.name}`;
+	};
+}
+
+const test = new MyClass();
+test.logger();
+```
+
+不出所料，识别不了
+
+怎么才能使用呢？Babel 其实提供了对应的插件：
+
+-   @babel/plugin-proposal-decorators
+    -   解析@装饰器语法
+-   @babel/plugin-proposal-class-properties
+    -   解析直接在 class 里面声明实例化成员,不用在 constructor 里面声明了
+
+安装插件
+
+```js
+yarn add -D @babel/plugin-proposal-decorators @babel/plugin-proposal-class-properties
+```
+
+@装饰器语法在 vscode 编辑器报错,[解决办法](https://www.cnblogs.com/Annely/p/14613567.html)
+
+根目录下新增 jsconfig.json
+
+```js
+{
+	// 去掉@装饰器语法带来的错误警告
+	"compilerOptions": {
+		"experimentalDecorators": true // 主要是这个
+	}
+}
+```
