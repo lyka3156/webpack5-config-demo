@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // 压缩css
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// 压缩js
+const TerserPlugin = require('terser-webpack-plugin');
 // 将已存在的单个文件或整个目录复制到打包目录
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
@@ -15,7 +17,7 @@ module.exports = {
 	entry: './src/index.js',
 
 	// 开发模式打包     development/production
-	mode: 'development',
+	mode: 'production',
 
 	// 打包输出
 	output: {
@@ -144,7 +146,25 @@ module.exports = {
 	optimization: {
 		minimizer: [
 			// 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
-			`...`,
+			// `...`,
+			// 自定义配置压缩js的规则,不使用webpack5自带的压缩js规则
+			// https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+			new TerserPlugin({
+				terserOptions: {
+					// parallel: true, // 启用/禁用多进程并发运行功能
+					// cache: true,
+					compress: {
+						warnings: true, // 是否去除warnig
+						// drop_console: process.env.BUILD_ENV === 'prod', // 是否去除console
+					},
+					// output: {
+					// 	comments: false,
+					// 	// comments: /Build in/i
+					// },
+					safari10: true,
+				},
+				extractComments: false, // 启用/禁用剥离注释功能
+			}),
 			// 启动css压缩  一般在生产模式配置,开发环境不配置,可以通过环境来配置是否压缩css
 			new CssMinimizerPlugin(),
 		],
