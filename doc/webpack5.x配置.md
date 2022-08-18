@@ -1344,3 +1344,146 @@ dist
 推荐：(none)`
 
 -   就是不想别人看到我的源代码
+
+### 2.9 filename 的 hash 值
+
+Webpack 文件指纹策略是将文件名后面加上 hash 值。特别在使用 CDN 的时候，缓存是它的特点与优势，但如果打包的文件名，没有 hash 后缀的话，你肯定会被缓存折磨的够呛
+
+例如我们在基础配置中用到的：`filename: "[name]_[contenthash:8][ext]"`
+
+这里里面 [] 包起来的，就叫占位符，占位符有下面这些类型
+
+1. 编译层面的占位符
+
+ <table>
+     <thead style="background-color: #3eaf7c">
+     <tr>
+         <th style="text-align: left;">占位符</th>
+         <th style="text-align: left;">描述</th>
+     </tr>
+     </thead>
+     <tbody>
+    <tr>
+         <td style="text-align: left;">fullhash</td>
+         <td style="text-align: left;">compilation 完整的 hash 值</td>
+     </tr>
+     </tbody>
+ </table>
+
+2. chunk 层面的占位符
+
+<table>
+    <thead style="background-color: #3eaf7c">
+    <tr>
+        <th style="text-align: left;">占位符</th>
+        <th style="text-align: left;">描述</th>
+    </tr>
+    </thead>
+    <tbody>
+   <tr>
+        <td style="text-align: left;">id</td>
+        <td style="text-align: left;">此 chunk 的 ID</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">name</td>
+        <td style="text-align: left;">如果设置，则为此 chunk 的名称，否则使用 chunk 的 ID</td>
+    </tr>
+      <tr>
+        <td style="text-align: left;">chunkhash</td>
+        <td style="text-align: left;">此 chunk 的 hash 值，包含该 chunk 的所有元素</td>
+    </tr>
+      <tr>
+        <td style="text-align: left;">contenthash</td>
+        <td style="text-align: left;">此 chunk 的 hash 值，只包括该内容类型的元素</td>
+    </tr>
+    </tbody>
+</table>
+
+3. 模块层面的占位符
+
+<table>
+    <thead style="background-color: #3eaf7c">
+    <tr>
+        <th style="text-align: left;">占位符</th>
+        <th style="text-align: left;">描述</th>
+    </tr>
+    </thead>
+    <tbody>
+   <tr>
+        <td style="text-align: left;">id</td>
+        <td style="text-align: left;">模块的 ID</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">hash</td>
+        <td style="text-align: left;">模块的 Hash 值</td>
+    </tr>
+      <tr>
+        <td style="text-align: left;">contenthash</td>
+        <td style="text-align: left;">模块内容的 Hash 值</td>
+    </tr>
+    </tbody>
+</table>
+
+4. 文件层面的占位符
+
+<table>
+    <thead style="background-color: #3eaf7c">
+    <tr>
+        <th style="text-align: left;">占位符</th>
+        <th style="text-align: left;">描述</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: left;">file</td>
+        <td style="text-align: left;">filename 和路径，不含 query 或 fragment</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">query</td>
+        <td style="text-align: left;">带前缀 ? 的 query</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">fragment</td>
+        <td style="text-align: left;">带前缀 # 的 fragment</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">base</td>
+        <td style="text-align: left;">只有 filename（包含扩展名），不含 patd</td>
+    </tr>
+   <tr>
+        <td style="text-align: left;">name</td>
+        <td style="text-align: left;">只有 filename，不含扩展名或 patd</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">path</td>
+        <td style="text-align: left;">只有 path，不含 filename</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">ext</td>
+        <td style="text-align: left;">带前缀 . 的扩展名（对 output.filename 不可用）</td>
+    </tr>
+    </tbody>
+</table>
+
+5. URL 层面的占位符
+
+ <table>
+     <thead style="background-color: #3eaf7c">
+     <tr>
+         <th style="text-align: left;">占位符</th>
+         <th style="text-align: left;">描述</th>
+     </tr>
+     </thead>
+     <tbody>
+    <tr>
+         <td style="text-align: left;">url</td>
+         <td style="text-align: left;">URL</td>
+     </tr>
+     </tbody>
+ </table>
+
+而我们用的最多的就是 hash、chunkhash、contenthash,他们的[区别](https://www.yuque.com/u383952/za6n9o/utodde)如下:
+
+-   `hash` ：任何一个文件改动，整个项目的构建 hash 值都会改变；
+-   `chunkhash`：文件的改动只会影响其所在 chunk 的 hash 值,也包含其依赖的模块(文件)
+-   `contenthash`：每个文件都有单独的 hash 值，文件的改动只会影响自身的 hash 值；
