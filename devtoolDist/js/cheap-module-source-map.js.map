@@ -1,0 +1,1 @@
+{"version":3,"file":"js/cheap-module-source-map.js","mappings":";;;;;AAAA;AACA;AACA;;AAEA;AAEA;;AAEA","sources":["webpack://webpack5-config-test1/./src/devtool.js"],"sourcesContent":["const sum = (a, b) => {\r\n\treturn a + b;\r\n};\r\n\r\nconst count = sum(2, 3);\r\n\r\nconsole.log(count);\r\n// 语法错误\r\nconsoleg.log(count);\r\n"],"names":[],"sourceRoot":""}

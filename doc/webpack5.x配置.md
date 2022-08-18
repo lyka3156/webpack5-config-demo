@@ -982,3 +982,226 @@ module.exports = {
 ```js
 webpack --mode=development
 ```
+
+### 2.8 配置 devtool [文档地址](https://webpack.docschina.org/configuration/devtool/)
+
+1. 此选项控制是否生成，以及如何生成 source map 文件
+2. SourceMap 是一种映射关系，当项目运行后，如果出现错误，我们可以利用 SourceMap 反向定位到源码位置
+
+#### 1. devtool 配置
+
+```js
+module.exports = {
+    // 入口地址
+  entry: './src/index.js',
+  output: {
+    // 输出文件目录
+    path: path.join(__dirname, 'dist'),
+     // 输出文件名
+    filename: 'main.js',
+  },
+  // 生成socure map 文件
+  devtool: 'source-map',
+```
+
+执行打包后，dist 目录下会生成以 .map 结尾的 SourceMap 文件
+
+```js
+dist
+├─ main.js
+└─ main.js.map
+```
+
+#### 2. devtool 不同配置项插件
+
+1.  devtool 配置项模式种类
+    -   eval
+    -   eval-cheap-source-map
+    -   eval-cheap-module-source-map
+    -   eval-source-map
+    -   cheap-source-map
+    -   cheap-module-source-map
+    -   inline-cheap-source-map
+    -   inline-cheap-module-source-map
+    -   source-map
+    -   inline-source-map
+    -   hidden-source-map
+    -   nosources-source-map
+
+验证 devtool 名称时， 我们期望使用某种模式， 注意不要混淆 devtool 字符串的顺序，
+模式是： [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map.
+
+2.  以上配置项模式单个关键字的意思
+
+<table>
+    <thead style="background-color: #3eaf7c">
+    <tr>
+        <th style="text-align: left; width:100px;">关键字</th>
+        <th style="text-align: left; width: 600px;">描述</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: left">inline</td>
+        <td style="text-align: left">代码内通过 dataUrl 形式引入 SourceMap
+        </td>
+    </tr>
+     <tr>
+        <td style="text-align: left">hidden</td>
+        <td style="text-align: left">生成 SourceMap 文件，但不使用
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">eval</td>
+        <td style="text-align: left">生成eval(...) 形式执行代码，通过 dataUrl 形式引入 SourceMap,带eval的构建模式能cache SourceMap
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">nosources</td>
+        <td style="text-align: left">不生成 SourceMap</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">cheap</td>
+        <td style="text-align: left">只需要定位到行信息，不需要列信息</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">module</td>
+        <td style="text-align: left">展示源代码中的错误位置</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">source-map</td>
+        <td style="text-align: left">原始代码,最好的sourcemap质量有完整的结果，但是会很慢
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+3. 不同配置项使用单独的打包入口， `webpack.config.js` 配置
+
+```js
+const path = require('path');
+const resolvePath = (p) => path.resolve(__dirname, p);
+// https://github.com/webpack/webpack/tree/main/examples/source-map
+
+// html 模板插件
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// 1）定义不同的打包类型
+const allModes = [
+	'eval',
+	'eval-cheap-source-map',
+	'eval-cheap-module-source-map',
+	'eval-source-map',
+	'cheap-source-map',
+	'cheap-module-source-map',
+	'inline-cheap-source-map',
+	'inline-cheap-module-source-map',
+	'source-map',
+	'inline-source-map',
+	'hidden-source-map',
+	'nosources-source-map',
+];
+
+// 2）循环不同 SourceMap 模式，生成多个打包入口
+module.exports = allModes.map((devtool) => ({
+	// 开发模式
+	mode: 'development',
+	// 入口文件
+	entry: './src/devtool.js',
+	// 打包输出
+	output: {
+		// 输出文件目录（将来所有资源输出的公共目录，包括css和静态文件等等）
+		path: resolvePath('../devtoolDist'),
+		// 输出文件名，默认main.js
+		filename: `js/${devtool}.js`,
+		// 打包前清空输出目录，相当于clean-webpack-plugin插件的作用,webpack5新增。
+		clean: true,
+	},
+	// source-map配置
+	devtool,
+	// 模块
+	module: {
+		rules: [
+			{
+				// 匹配js
+				test: /.js$/,
+				use: {
+					// 使用babel-loader将高级js语法转换成浏览器支持的js
+					loader: 'babel-loader',
+				},
+			},
+		],
+	},
+	// 插件
+	plugins: [
+		//   3）输出到不同的页面
+		new HtmlWebpackPlugin({
+			template: './src/devtool.html',
+			filename: `${devtool}.html`,
+		}),
+	],
+	// 优化
+	optimization: {
+		// runtimeChunk作用是为了线上更新版本时，充分利用浏览器缓存，使用户感知的影响到最低。
+		// https://blog.csdn.net/fy_java1995/article/details/110119934
+		// runtimeChunk: true,
+	},
+}));
+```
+
+4. 模拟代码错误
+
+```js
+// ./src/devtool.js
+const sum = (a, b) => {
+	return a + b;
+};
+
+const count = sum(2, 3);
+
+console.log(count);
+// 语法错误
+consoleg.log(count);
+```
+
+5. 打包后的目录结构
+
+从下面目录结构我们看出,含 eval 和 inline 模式的都没有对应的.map 文件
+
+```js
+dist
+├─ js
+│  ├─ cheap-module-source-map.js #............ 有对应的 .map 文件
+│  ├─ cheap-module-source-map.js.map
+│  ├─ cheap-source-map.js #................... 有
+│  ├─ cheap-source-map.js.map
+│  ├─ eval-cheap-module-source-map.js #....... 无
+│  ├─ eval-cheap-source-map.js #.............. 无
+│  ├─ eval-source-map.js #.................... 无
+│  ├─ eval.js #............................... 无
+│  ├─ hidden-source-map.js #.................. 有
+│  ├─ hidden-source-map.js.map
+│  ├─ inline-cheap-module-source-map.js #..... 无
+│  ├─ inline-cheap-source-map.js #............ 无
+│  ├─ inline-source-map.js #.................. 无
+│  ├─ nosources-source-map.js #............... 有
+│  ├─ nosources-source-map.js.map
+│  ├─ source-map.js #......................... 有
+│  └─ source-map.js.map
+├─ cheap-module-source-map.html
+├─ cheap-source-map.html
+├─ eval-cheap-module-source-map.html
+├─ eval-cheap-source-map.html
+├─ eval-source-map.html
+├─ eval.html
+├─ hidden-source-map.html
+├─ inline-cheap-module-source-map.html
+├─ inline-cheap-source-map.html
+├─ inline-source-map.html
+├─ nosources-source-map.html
+└─ source-map.html
+```
+
+6. 我们在 dist 目录起一个本地服务，在浏览器打开
+
+![本地服务]("./img/1.jpg")
