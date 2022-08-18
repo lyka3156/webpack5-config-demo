@@ -1203,5 +1203,144 @@ dist
 ```
 
 6. 我们在 dist 目录起一个本地服务，在浏览器打开
+   ![本地图片预览](https://cdn.nlark.com/yuque/0/2022/jpeg/566044/1660803556754-4898edcc-b44f-42d0-93dd-f3eaee18efa4.jpeg)
 
-![本地服务]("./img/1.jpg")
+7. 我们打开对应的 html 通过分析得出以下结论:
+
+-   `eval` 模式
+    1. 生成代码通过 `eval` 执行
+    2. 源代码位置通过 `@sourceURL` 注明位置
+    3. 只能定位到`某个文件`,无法定位到错误`行列`位置
+    4. 不用生成 `SourceMap` 文件，`打包速度快`
+-   `source-map` 模式
+    1. 生成了对应的 SourceMap 文件，`打包速度慢`
+    2. 在源代码中定位到错误所在`行列`信息
+-   `eval-source-map`模式
+    1. 生成代码通过 `eval` 执行
+    2. 包含 `dataUrl` 形式的 `SourceMap` 文件
+    3. 可以在`编译后`的代码中定位到错误所在`行列`信息
+-   `eval-cheap-source-map` 模式
+    1.  生成代码通过 `eval` 执行
+    2.  包含 `dataUrl` 形式的 `SourceMap` 文件
+    3.  可以在`编译后`的代码中定位到错误所在`行列`信息
+    4.  不需要定位`列`信息，`打包速度较快`
+-   `eval-cheap-module-source-map` 模式
+    1.  生成代码通过 `eval` 执行
+    2.  包含 `dataUrl` 形式的 `SourceMap` 文件
+    3.  可以在`编译后`的代码中定位到错误所在`行`信息
+    4.  不需要定位`列`信息，`打包速度较快`
+    5.  在源代码中定位到错误所在行信息
+-   `inline-source-map` 模式
+    1. 通过 `dataUrl` 的形式引入 `SourceMap` 文件
+    2. 生成了对应的 SourceMap 文件，`打包速度慢`
+    3. 在源代码中定位到错误所在`行列`信息
+-   `hidden-source-map` 模式
+    1. 看不到 SourceMap 效果，但是生成了 SourceMap 文件
+-   `nosources-source-map` 模式
+    1. 能看到错误出现的位置
+    2. 但是没有办法找到对应的源码
+
+8. 综上总结: [文档](https://webpack.docschina.org/configuration/devtool/)
+
+<table>
+    <thead style="background-color: #3eaf7c">
+    <tr>
+        <th style="text-align: left;">devtool</th>
+        <th style="text-align: left;">build</th>
+        <th style="text-align: left;">rebuild</th>
+        <th style="text-align: left;">production</th>
+        <th style="text-align: left;">显示代码</th>
+        <th style="text-align: left;">SourceMap 文件</th>
+    </tr>
+    </thead>
+    <tbody>
+   <tr>
+        <td style="text-align: left;">none</td>
+        <td style="text-align: left;">很快</td>
+        <td style="text-align: left;">很快</td>
+        <td style="text-align: left;">yes</td>
+        <td style="text-align: left;">无</td>
+        <td style="text-align: left;">无</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">eval</td>
+        <td style="text-align: left;">快</td>
+        <td style="text-align: left;">很快(cache)</td>
+        <td style="text-align: left;">yes</td>
+        <td style="text-align: left;">编译后</td>
+        <td style="text-align: left;">无</td>
+    </tr>
+      <tr>
+        <td style="text-align: left;">source-map</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">yes</td>
+        <td style="text-align: left;">源代码</td>
+        <td style="text-align: left;">有</td>
+    </tr>
+      <tr>
+        <td style="text-align: left;">eval-source-map</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">一般(cache)</td>
+        <td style="text-align: left;">no</td>
+        <td style="text-align: left;">编译后</td>
+        <td style="text-align: left;">有（dataUrl）</td>
+    </tr>
+     <tr>
+        <td style="text-align: left;">eval-cheap-source-map</td>
+        <td style="text-align: left;">一般</td>
+        <td style="text-align: left;">快(cache)</td>
+        <td style="text-align: left;">no</td>
+        <td style="text-align: left;">编译后</td>
+        <td style="text-align: left;">有（dataUrl）</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">eval-cheap-module-source-map</td>
+        <td style="text-align: left;">慢</td>
+        <td style="text-align: left;">快(cache)</td>
+        <td style="text-align: left;">no</td>
+        <td style="text-align: left;">源代码</td>
+        <td style="text-align: left;">有（dataUrl）</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">inline-source-map</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">no</td>
+        <td style="text-align: left;">源代码</td>
+        <td style="text-align: left;">有（dataUrl）</td>
+    </tr>
+   <tr>
+        <td style="text-align: left;">hidden-source-map</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">no</td>
+        <td style="text-align: left;">源代码</td>
+        <td style="text-align: left;">有</td>
+    </tr>
+   <tr>
+        <td style="text-align: left;">nosource-source-map</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">很慢</td>
+        <td style="text-align: left;">yes</td>
+        <td style="text-align: left;">源代码</td>
+        <td style="text-align: left;">无</td>
+    </tr>
+    </tbody>
+</table>
+
+#### 3. devtool 推荐配置
+
+1. 本地开发配置
+
+推荐使用: `eval-cheap-module-source-map`
+
+-   本地开发首次打包慢点没关系，因为 `eval` 缓存的原因，`rebuild` 会很快
+-   开发中，我们每行代码不会写的太长，只需要定位到行就行，所以加上 `cheap`
+-   我们希望能够找到源代码的错误，而不是打包后的，所以需要加上 `module`
+
+2. 生产上线配置
+
+推荐：(none)`
+
+-   就是不想别人看到我的源代码

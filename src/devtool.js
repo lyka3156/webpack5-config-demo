@@ -1,7 +1,4 @@
-const sum = (a, b) => {
-	return a + b;
-};
-
+import { sum } from './utils/common.js';
 const count = sum(2, 3);
 
 console.log(count);
