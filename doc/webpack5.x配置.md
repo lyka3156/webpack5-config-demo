@@ -1487,3 +1487,82 @@ Webpack 文件指纹策略是将文件名后面加上 hash 值。特别在使用
 -   `hash` ：任何一个文件改动，整个项目的构建 hash 值都会改变；
 -   `chunkhash`：文件的改动只会影响其所在 chunk 的 hash 值,也包含其依赖的模块(文件)
 -   `contenthash`：每个文件都有单独的 hash 值，文件的改动只会影响自身的 hash 值；
+
+### 2.10 区分环境
+
+本地开发和生产部署,肯定是有不同的需求
+
+1.  本地环境：
+
+    -   需要更快的构建速度
+    -   需要打印 debug 信息
+    -   需要开发服务器,用来模拟线上服务器
+        -   需要 live reload 或 hot reload 功能
+    -   需要 source map 方便定位问题
+
+2.  生产环境
+
+    1. 需要更小的包体积，代码压缩+tree-shaking
+    2. 需要进行代码分割
+    3. 需要压缩图片体积
+
+#### 2. 如何做环境区分
+
+##### 1. 设置环境变量来区分当前是哪个环境
+
+安装 `[cross-env]`(https://www.npmjs.com/package/cross-env)
+用来设置环境变量的,通过设置环境变量来区分不同的环境
+
+```js
+yarn add -D cross-env
+```
+
+配置启动命令并且设置环境变量,修改 package.json
+
+```js
+// package.json
+"scripts": {
+    "dev": "cross-env NODE_ENV=dev webpack serve --mode development",
+    "test": "cross-env NODE_ENV=test webpack --mode production",
+    "build": "cross-env NODE_ENV=prod webpack --mode production"
+},
+```
+
+##### 2. 在 webpack 中根据不同的环境变量配置不同的环境
+
+往往我们在项目中会把 webpack 分成如下几个配置文件,这样方便维护
+
+-   webpack.base.config.js 开发和生产公用的配置信息
+-   webpack.dev.config.js 开发环境单独的配置
+-   webpack.prod.config.js 生产环境单独的配置
+
+安装 `webpack-merge` 用来合并 webpack 配置
+
+修改启动命令
+
+```js
+// package.json
+"scripts": {
+    "dev": "cross-env NODE_ENV=dev webpack serve --config ./build/webpack.base.config.js",
+    "test": "cross-env NODE_ENV=test webpack --config ./build/webpack.dev.config.js",
+    "build": "cross-env NODE_ENV=prod webpack --config ./build/webpack.prod.config.js"
+},
+```
+
+1.  `webpack.base.config.js` 公用配置
+
+```js
+// webpack.base.config.js
+```
+
+2.  `webpack.dev.config.js` 开发配置
+
+```js
+// webpack.dev.config.js
+```
+
+3.  `webpack.prod.config.js` 生产配置
+
+```js
+// webpack.prod.config.js
+```

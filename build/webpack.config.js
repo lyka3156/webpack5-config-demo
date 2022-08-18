@@ -12,6 +12,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
+console.log(1111111, process.env.NODE_ENV);
+
 module.exports = {
 	// 入口文件
 	entry: './src/index.js',
