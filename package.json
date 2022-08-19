@@ -4,8 +4,10 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
+		"dev": "webpack serve --config ./build/webpack.config.js",
 		"build": "cross-env NODE_ENV=prod webpack --config ./build/webpack.config.js",
-		"dev": "cross-env NODE_ENV=dev webpack serve --config ./build/webpack.config.js",
+		"buildTest": "cross-env NODE_ENV=prod webpack --config ./build/webpack.prod.config.js",
+		"devTest": "cross-env NODE_ENV=dev webpack serve --config ./build/webpack.dev.config.js",
 		"devtool": "webpack --config ./build/webpack.devtool.config.js"
 	},
 	"devDependencies": {

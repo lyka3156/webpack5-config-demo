@@ -4,23 +4,15 @@ const resolvePath = (p) => path.resolve(__dirname, p);
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // 该插件将CSS提取到单独的文件中。它会为每个chunk创造一个css文件。需配合loader一起使用
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// 压缩css
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// 压缩js
-const TerserPlugin = require('terser-webpack-plugin');
 // 将已存在的单个文件或整个目录复制到打包目录
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
+// console.log(1111111, process.env.NODE_ENV);
+
 module.exports = {
 	// 入口文件
 	entry: './src/index.js',
-
-	// 开发模式打包     development/production
-	mode: 'production',
-
-	// 配置source map       开发:'cheap-module-source-map'  生产:'none'
-	devtool: 'cheap-module-source-map',
 
 	// 打包输出
 	output: {
@@ -114,32 +106,6 @@ module.exports = {
 		],
 	},
 
-	// 开发服务器
-	devServer: {
-		// 运行代码的目录   老版写法: 		contentBase: resolvePath('dist'),
-		static: {
-			directory: resolvePath('dist'),
-		},
-		// 为每个静态文件开启gzip压缩
-		compress: true,
-		host: 'localhost', // 域名
-		port: 9000, // 端口号
-		// open: true, // 自动打开浏览器
-		hot: true, //开启HMR功能
-		// 设置代理
-		proxy: {
-			// 一旦devServer(9000端口)接收到/api/xxx的请求，就会用devServer起的服务把请求转发到另外一个服务器（3000）
-			// 以此来解决开发中的跨域问题
-			api: {
-				target: 'htttp://localhost:3000',
-				// 发送请求时，请求路径重写：将/api/xxx  --> /xxx （去掉/api）
-				pathRewrite: {
-					'^api': '',
-				},
-			},
-		},
-	},
-
 	// 插件
 	plugins: [
 		// 把打包后的资源文件，例如：js 或者 css 文件可以自动引入到 Html 中
@@ -169,37 +135,7 @@ module.exports = {
 			TWO: '1+1', // 2
 			'typeof window': JSON.stringify('object'), // `object`
 			// 用来区分环境
-			// 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+			NODE_ENV: JSON.stringify(process.env.NODE_ENV),
 		}),
 	],
-
-	// 优化
-	optimization: {
-		minimizer: [
-			// 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
-			// `...`,
-			// 自定义配置压缩js的规则,不使用webpack5自带的压缩js规则
-			// https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-			new TerserPlugin({
-				terserOptions: {
-					// parallel: true, // 启用/禁用多进程并发运行功能
-					// cache: true,
-					compress: {
-						warnings: true, // 是否去除warnig
-						// drop_console: process.env.BUILD_ENV === 'prod', // 是否去除console
-					},
-					// output: {
-					// 	comments: false,
-					// 	// comments: /Build in/i
-					// },
-					safari10: true,
-				},
-				extractComments: false, // 启用/禁用剥离注释功能
-			}),
-			// 启动css压缩  一般在生产模式配置,开发环境不配置,可以通过环境来配置是否压缩css
-			new CssMinimizerPlugin(),
-		],
-		// 如果还想在开发环境下启用 CSS 优化，请将 optimization.minimize 设置为 true:
-		// minimize: true,
-	},
 };
